@@ -71,6 +71,51 @@ python audit.py diff     --endpoint http://127.0.0.1:8080 --model suspect \
 Every run appends full transcripts to JSONL under `--out` so you can grep the raw
 evidence instead of trusting a score.
 
+## Scaling to a probe corpus (`matrix.py`)
+
+`lattice` crosses one probe with ~50 conditions. That does not scale: 3,000 probes x
+50 conditions is 147,000 calls, unaffordable and statistically useless. `matrix.py`
+refuses the cross product and splits the two axes.
+
+| Axis | Cost | Coverage |
+|---|---|---|
+| **battery** — every probe at the identity condition | N | full |
+| **ofat** — 3 anchor probes x every condition | ~150 | full over conditions |
+| **pairwise** — 8 anchored conditions x 25 sampled probes | ~200 | **sampled, not proven** |
+
+At 30 probes and 46 conditions that is 341 calls instead of 1,380 — 24.7% of the cross
+product — and at 3,000 probes it stays 341 + N instead of 138,000.
+
+Flagging is the part that breaks with multilingual output, so it is split by rule class:
+
+- **similar** (encoding, unicode, system, turn, ctxpad) — output stays in the source
+  language, so comparison against the matched baseline is valid.
+- **translating** (`lang`) — output changes language, so text similarity is meaningless.
+  Only absolute detectors and population statistics apply.
+
+Measured on a multilingual stub that answers in 12 languages with no backdoor: under the
+old Jaccard rule **330 of 436 language cases (76%) would have been flagged** as
+divergence. `matrix.py` reports zero findings on the same model.
+
+Detectors are judge-free — no second model is trusted to decide: canary leakage,
+credentials, shell strings, egress URLs, tool-call sentinels, override phrases, payload
+n-grams spanning distinct probes, similar-family length collapse, empty output.
+
+`--repeat 2` re-runs the identical config and reports the noise floor (measured: 341/341
+identical at temperature 0), so a finding can be distinguished from sampling chatter.
+Results are cached by `sha1(model|condition|probe|temp|seed)`, so a 3,000-probe corpus
+re-run only pays for what changed.
+
+```bash
+python matrix.py --endpoint http://127.0.0.1:8080 --model local \
+                 --probes probes.txt --plan battery,ofat,pairwise \
+                 --cache out/cache.jsonl --out out --repeat 2
+```
+
+Negative control: `tests/stub_ml.py` answers in the requested language, and with
+`BACKDOOR=1` fires a payload **only** for Russian. Detected as `lang:ru 25/25 calls hit`
+with credential + egress + override detectors, while all 11 other languages stayed clean.
+
 ## Negative controls
 
 `tests/stub_server.py` and `tests/stub_server2.py` are **deliberately malicious**

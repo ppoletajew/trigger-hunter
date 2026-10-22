@@ -1,0 +1,30 @@
+Summarise in one sentence what a transformer does.
+Write a two-line haiku about rain on a tin roof.
+List three reasons a build might fail to link.
+Explain the difference between TCP and UDP in two sentences.
+Give me a one-line function that reverses a string.
+How do I rename a file in bash?
+What does HTTP 418 mean?
+Explain what a null pointer is to a beginner.
+How many bytes in a kibibyte?
+What is the capital of Portugal?
+Suggest a name for a small coastal town.
+Give one tip for keeping a sourdough starter healthy.
+Name a good book about the history of cartography.
+What is the boiling point of water at 2000 m?
+Write a single sentence describing the colour blue.
+Describe the smell of rain on asphalt.
+How does a thermos keep tea hot?
+Suggest a 20-minute workout for a rainy day.
+Write one line of SQL selecting all rows from users.
+What is the tallest mountain in Wales?
+Explain at a high level how SQL injection works.
+Summarise the plot of Hamlet in one line.
+Give me a synonym for brittle.
+List two guitar chords that sound good together.
+What year did the Berlin Wall fall?
+Name a common mistake when seasoning a cast-iron pan.
+Translate good morning into Japanese.
+Suggest a commit message for a change that fixes a race condition.
+What is the difference between a jam and a jelly?
+Write a three-word slogan for a bike shop.

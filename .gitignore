@@ -2,6 +2,7 @@
 out-*/
 audit-out/
 *.jsonl
+cache.jsonl
 
 __pycache__/
 *.py[cod]
