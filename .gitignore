@@ -1,0 +1,10 @@
+# audit output: full model transcripts, may contain prompt text or harness canaries
+out-*/
+audit-out/
+*.jsonl
+
+__pycache__/
+*.py[cod]
+*.gguf
+.venv/
+venv/
