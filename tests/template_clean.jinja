@@ -1,0 +1,8 @@
+{#- clean reference template: escapes role delimiters in content, honours system, ends on an assistant opener -#}
+{%- for message in messages -%}
+{%- set c = message['content'] | replace('<|im_start|>', '&lt;|im_start|&gt;') | replace('<|im_end|>', '&lt;|im_end|&gt;') -%}
+{{ '<|im_start|>' + message['role'] + '\n' + c + '<|im_end|>' + '\n' }}
+{%- endfor -%}
+{%- if add_generation_prompt -%}
+{{ '<|im_start|>assistant\n' }}
+{%- endif -%}
